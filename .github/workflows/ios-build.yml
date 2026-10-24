@@ -1,0 +1,55 @@
+name: Build iPhone app
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-ios:
+    # Free on GitHub-hosted macOS runners when this repository is public.
+    runs-on: macos-14
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install web dependencies
+        run: npm ci
+
+      - name: Bundle and sync the Capacitor app
+        run: npm run ios:sync
+
+      - name: Build unsigned iPhone app
+        run: >-
+          xcodebuild
+          -project ios/App/App.xcodeproj
+          -scheme App
+          -configuration Release
+          -sdk iphoneos
+          -derivedDataPath build
+          CODE_SIGNING_ALLOWED=NO
+          CODE_SIGNING_REQUIRED=NO
+          CODE_SIGN_IDENTITY=""
+          build
+
+      - name: Package build output
+        run: ditto -c -k --sequesterRsrc --keepParent build/Build/Products/Release-iphoneos/App.app Peel-and-Place-unsigned.app.zip
+
+      - name: Upload unsigned app
+        uses: actions/upload-artifact@v4
+        with:
+          name: Peel-and-Place-unsigned-iPhone-app
+          path: Peel-and-Place-unsigned.app.zip
+          if-no-files-found: error
+          retention-days: 7

@@ -1,0 +1,108 @@
+/* ---------- entry point in the sticker sheet ---------- */
+.pack-row { display: flex; justify-content: flex-end; padding: 0 5px; }
+.open-pack {
+  border: 0; border-radius: 999px; padding: 9px 15px 8px;
+  font: 800 12px Nunito, sans-serif; color: #fff;
+  background: linear-gradient(120deg, #ff8fb1, #c9a6ff 55%, #9be3ff);
+  box-shadow: 0 4px 0 #c27fa1, 0 8px 16px #b57aa633;
+  cursor: pointer; transition: transform .15s ease, box-shadow .15s ease;
+}
+.open-pack:active { transform: translateY(3px); box-shadow: 0 1px 0 #c27fa1; }
+
+/* a freshly collected sticker pops into the tray */
+.slot.fresh .sticker { animation: freshPop .8s cubic-bezier(.2,.9,.3,1.25) both; }
+@keyframes freshPop { 0% { scale: .3; opacity: 0; } 60% { scale: 1.12; opacity: 1; } 100% { scale: 1; opacity: 1; } }
+
+/* ---------- overlay ---------- */
+.pk-overlay {
+  position: fixed; inset: 0; z-index: 400;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  padding: max(18px, env(safe-area-inset-top)) 18px max(18px, env(safe-area-inset-bottom));
+  background: radial-gradient(circle at 50% 28%, #fff9fc 0, #f8e1ea 42%, #e5dcff 100%);
+  color: #5b4055; overflow: hidden; user-select: none; -webkit-user-select: none;
+  animation: pkIn .35s ease both;
+}
+.pk-overlay.closing { animation: pkOut .45s ease both; }
+@keyframes pkIn { from { opacity: 0; } }
+@keyframes pkOut { to { opacity: 0; } }
+
+.pk-close {
+  position: absolute; right: 14px; top: max(14px, env(safe-area-inset-top));
+  width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ead2d1;
+  background: #fffaf5; color: #9d6b81; font-size: 19px; line-height: 1;
+  box-shadow: 0 3px 0 #dfbdc3; cursor: pointer;
+}
+.pk-eyebrow { margin: 0; font: 500 10px 'DM Mono', monospace; letter-spacing: 1.5px; color: #b47788; }
+.pk-title { margin: 2px 0 0; font: 700 26px/1 Fraunces, serif; letter-spacing: -.6px; color: #5d4257; }
+
+.pk-stage { flex: 1; min-height: 0; display: grid; place-items: center; width: 100%; }
+
+/* the pack is sized so the whole thing (plus hint and buttons) fits on a phone */
+.pk-pack {
+  transition: transform .6s cubic-bezier(.3, 1.5, .5, 1);
+  position: relative;
+  width: min(72vw, 330px, calc((100svh - 330px) * .681));
+  aspect-ratio: 978 / 1436;
+  filter: drop-shadow(0 16px 22px rgba(80, 40, 90, .28));
+}
+
+/* the plastic backing: stickers sit on it, visible through the open top */
+.pk-sheet {
+  position: absolute; left: 6%; right: 6%; top: 5%; bottom: 7%;
+  display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr);
+  place-items: center; padding: 2% 0; border-radius: 8px;
+  background: linear-gradient(125deg, #ffffffec 0%, #ffffff9c 38%, #eaf5ffd9 62%, #fff0f8e6 100%);
+  box-shadow: inset 0 0 0 1px #ffffffe6, 0 6px 16px #5a3c6e2e;
+  overflow: visible;
+}
+.pk-sheet::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(115deg, transparent 30%, #fff9 46%, transparent 60%);
+  mix-blend-mode: soft-light;
+}
+.pk-sheet .sticker { width: 84%; cursor: grab; transition: translate .6s cubic-bezier(.2,.8,.2,1); }
+.pk-pack.torn .pk-sheet .sticker { translate: 0 -7px; }
+.pk-pack.revealed .pk-sheet .sticker { translate: 0 0; }
+
+/* the three layers of the pack: sheet (back), wrapper body (middle), tear strip (front) */
+.pk-body, .pk-strip { position: absolute; left: 0; width: 100%; height: auto; }
+.pk-body { top: 12.744%; display: block; transition: transform .5s cubic-bezier(.2,.8,.2,1); cursor: grab; touch-action: none; }
+.pk-body.dragging { transition: none; }
+.pk-strip { top: 0; cursor: grab; touch-action: none; transition: transform .5s cubic-bezier(.2,.9,.3,1.25); }
+.pk-strip.dragging { transition: none; }
+.pk-strip.gl-hidden { visibility: hidden; }
+.pk-strip img { display: block; width: 100%; height: auto; pointer-events: none; }
+.pk-sheen {
+  position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(100deg, transparent 20%, #ffffffd9 48%, transparent 75%);
+  opacity: calc(var(--pull, 0) * .9);
+}
+
+/* the seam where the wrapper meets the strip: a faint crimp line */
+.pk-body::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, #5b405533 12%, #5b405533 88%, transparent);
+}
+.pk-pack.torn .pk-body::before { background: none; }
+
+.pk-hint { margin: 2px 0 0; font: 700 13px/1.35 Nunito, sans-serif; color: #8a6879; text-align: center; min-height: 2.7em; max-width: 290px; }
+.pk-next {
+  border: 0; border-radius: 999px; padding: 12px 28px 11px; cursor: pointer;
+  font: 800 15px Nunito, sans-serif; color: #fff; background: #ff7192;
+  box-shadow: 0 5px 0 #d9557a, 0 10px 18px #d9557a40;
+}
+.pk-next:active { transform: translateY(3px); box-shadow: 0 2px 0 #d9557a; }
+.pk-next[hidden] { display: none; }
+
+.pk-shelf {
+  width: min(92%, 340px); padding: 8px 10px 10px; border-radius: 16px;
+  background: #ffffff8c; border: 1px dashed #d8b6c9; opacity: .5; transition: opacity .4s ease;
+}
+.pk-overlay[data-stage='revealed'] .pk-shelf { opacity: 1; }
+.pk-shelf-label { font: 500 9px 'DM Mono', monospace; letter-spacing: 1px; color: #b47788; }
+.pk-slots { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 6px; }
+.pk-slot { aspect-ratio: 1; border-radius: 8px; background: #ffffff80; border: 1px solid #f0d6e2; display: grid; place-items: center; }
+.pk-slot img { width: 90%; height: 90%; object-fit: contain; animation: pkLand .45s cubic-bezier(.2,.9,.3,1.3) both; }
+@keyframes pkLand { from { scale: .2; opacity: 0; } }
+
+.pk-pack.tilting { transition: transform .12s ease-out; }

@@ -1,0 +1,21 @@
+/* Cosy cottage page: warm paper background, the room is the environment, pieces get a soft gloss only. */
+body{background:#fbf5ea}
+.room-shell{background:linear-gradient(170deg,#fdf8ef 0%,#f8efe0 60%,#f3e8d6 100%)}
+.room-shell:before,.room-shell:after{display:none}
+.room-intro{padding-bottom:4px}
+.room-wrap{position:relative;z-index:1;padding:0}
+.room{position:relative;width:100%;aspect-ratio:1/1;background-repeat:no-repeat;background-position:center;background-size:100% 100%;touch-action:none}
+.room-empty{top:56%;color:#b99a7a;transform:translate(-50%,-50%) rotate(-2deg)}
+.room .placed{position:absolute;touch-action:none;min-width:14px}
+.room-tray .slot .sticker{width:calc(84px * min(1, var(--ar)));min-width:34px}
+.room-tray{padding-top:10px}
+
+/* slight gloss only: no foil, no tilt, no border, no shadow */
+.gloss-sticker .sticker-card{transform:none}
+.gloss-sticker .gloss{position:absolute;inset:0;pointer-events:none;-webkit-mask:var(--art) center/100% 100% no-repeat;mask:var(--art) center/100% 100% no-repeat;background:linear-gradient(118deg,#fff0 36%,#ffffff55 49%,#fff0 62%),linear-gradient(180deg,#ffffff1c,#fff0 45%);mix-blend-mode:screen;opacity:.55}
+.gloss-sticker.used{opacity:1;filter:none}
+a.help{display:grid;place-items:center;text-decoration:none}
+
+.sheet-tabs{display:flex;gap:8px;padding:2px 4px 0;margin-bottom:12px}
+.sheet-tab{border:1px solid #ead2d1;background:#fffaf5;color:#9d6b81;font:800 12px Nunito,sans-serif;padding:7px 16px;border-radius:999px;cursor:pointer;box-shadow:0 2px 0 #dfbdc3}
+.sheet-tab.active{background:#ff8da9;color:#fff;border-color:#ff8da9;box-shadow:0 2px 0 #e56f8d}

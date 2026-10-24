@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito:wght@600;700;800;900&display=swap');
+
+:root { font-family: Nunito, system-ui, sans-serif; color: #563d54; background: #f6e3e7; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { margin: 0; min-height: 100svh; background: radial-gradient(circle at 20% 5%, #fff7ec 0 10%, transparent 35%), #f5e1e6; overflow-x: hidden; }
+button { font: inherit; }
+.phone-shell { width: min(100%, 520px); min-height: 100svh; margin: auto; padding: max(15px, env(safe-area-inset-top)) 16px 24px; position: relative; overflow: hidden; background: linear-gradient(160deg, #fff8ef 0%, #f9e0e7 55%, #e7e4ff 100%); }
+.phone-shell:before,.phone-shell:after { content: ''; position:absolute; border-radius:50%; filter: blur(1px); pointer-events:none; opacity:.55; }
+.phone-shell:before { width:240px;height:240px; background:#ffd8a9; right:-110px; top:130px; } .phone-shell:after { width:190px;height:190px; background:#d3cdfd; left:-100px; bottom:50px; }
+.topbar,.intro,.page-wrap,.tray-section { position: relative; z-index: 1; }
+.topbar { display:flex; justify-content:space-between; align-items:center; padding: 4px 3px 14px; }
+.brand { display:flex; gap:8px; align-items:center; font-family:Fraunces,serif; font-size:19px; color:#5b4055; } .brand-star { color:#ff7192; font-size:22px; }
+.help { height:32px;width:32px;border-radius:50%;border:1px solid #ead2d1;background:#fffaf5;color:#9d6b81;font-weight:900;font-size:17px; box-shadow:0 3px 0 #dfbdc3; }
+.intro { display:flex; align-items:flex-end; justify-content:space-between; padding: 4px 7px 15px; } .eyebrow { margin:0 0 6px; font: 500 9px 'DM Mono', monospace; letter-spacing:1.5px;color:#b47788; } h1 { margin:0; font:700 30px/1 Fraunces,serif; letter-spacing:-1.2px;color:#5d4257; } .hint { margin:7px 0 0; font-size:12px; line-height:1.25;color:#8a6879;max-width:250px; }
+.counter { background:#fff6f6b8; border:1px solid #fff; border-radius:16px;padding:7px 11px 6px;text-align:center;box-shadow:0 5px 14px #9c64721c; transform:rotate(3deg); } .counter span { display:block;font:700 20px/16px Fraunces,serif;color:#ff6e91; }.counter small {font:500 9px 'DM Mono',monospace;color:#aa7788;}
+.page-wrap { padding: 0 5px; }.scrapbook-page { position:relative; height:min(51vh,420px); min-height:335px; overflow:hidden; border-radius:8px 10px 14px 8px; background: #fffbed; border:1px solid #e7d8bd; box-shadow: 0 14px 25px #72506336, inset 0 0 30px #d8b87c10; transform:rotate(-.8deg); }
+.scrapbook-page:before { content:'';position:absolute;inset:0;opacity:.38;background-image:linear-gradient(#eadcc7 1px,transparent 1px),linear-gradient(90deg,#eadcc7 1px,transparent 1px);background-size:22px 22px;mask-image:linear-gradient(#0005,#0002); }.scrapbook-page:after {content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,transparent 35%,#fff9 48%,transparent 55%);mix-blend-mode:soft-light;}
+.paper-word { position:absolute;font-family:Fraunces,serif;color:#d6a9ae;opacity:.75;font-size:20px;z-index:1; }.word-one { top:26px;left:22px;transform:rotate(-8deg); }.word-two{right:19px;bottom:19px;font-size:16px;transform:rotate(6deg);}.tape{position:absolute;width:68px;height:18px;background:#ffd9d4b8;z-index:2;}.tape-one{top:9px;right:29px;transform:rotate(12deg)}.tape-two{bottom:12px;left:30px;transform:rotate(-10deg);background:#d5edf0b8}.sparkle{position:absolute;color:#f3b35d;font-size:21px;z-index:1}.s1{left:36%;top:22%}.s2{right:19%;top:36%;color:#cbb7f7}.s3{left:14%;bottom:26%;color:#eeb5c0}.empty-note{position:absolute;text-align:center;top:45%;left:50%;transform:translate(-50%,-50%) rotate(-2deg);font:600 17px/1.25 Fraunces,serif;color:#c5a6a4;transition:.3s;z-index:1}.hidden{opacity:0;transform:translate(-50%,-50%) scale(.7)}
+.tray-section { margin-top:16px; }.tray-title{display:flex;justify-content:space-between;padding:0 5px 8px;font:500 9px 'DM Mono',monospace;color:#936b7a;letter-spacing:1px}.tray-title span:last-child{text-transform:none;letter-spacing:0;font-size:10px;color:#bd8393}.sticker-tray{display:flex;gap:13px;overflow-x:auto;padding:12px 8px 20px;scroll-snap-type:x mandatory;scrollbar-width:none}.sticker-tray::-webkit-scrollbar{display:none}
+
+/* ---------- stickers ---------- */
+.sticker-tray{align-items:flex-end}
+.slot{flex:none;display:flex;flex-direction:column;align-items:center;gap:7px;scroll-snap-align:start;padding-bottom:2px}
+.sticker-name{font:800 9px Nunito,sans-serif;color:#876273;text-align:center}
+.sticker{--tilt:0deg;--px:50;--py:50;--pfc:0;--rx:0deg;--ry:0deg;--bx:50;--by:50;--o:.5;position:relative;flex:none;height:auto;width:calc(88px * min(1, var(--ar)));aspect-ratio:var(--ar);transform:rotate(var(--tilt));cursor:grab;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;outline:none}
+.sticker.source{touch-action:pan-x}
+.sticker.placed{position:absolute;touch-action:none;min-width:58px}
+.sticker:focus-visible .sticker-card{outline:3px solid #ff7192;outline-offset:3px;border-radius:12px}
+.sticker.used{cursor:default;pointer-events:none}
+.sticker.used .sticker-card{visibility:hidden}
+.sticker.gl-hidden{visibility:hidden}
+.sticker-card{position:absolute;inset:0;isolation:isolate;transform:perspective(520px) rotateX(var(--rx)) rotateY(var(--ry));will-change:transform}
+.sticker-art{display:block;width:100%;height:100%;pointer-events:none;-webkit-user-drag:none}
+
+/* holographic foil: three blend layers, all clipped to the die-cut silhouette */
+.f{position:absolute;inset:0;pointer-events:none;-webkit-mask:var(--art) center/100% 100% no-repeat;mask:var(--art) center/100% 100% no-repeat;background-repeat:no-repeat}
+.f1{mix-blend-mode:multiply;opacity:calc(var(--o) * .4)}
+.f2{mix-blend-mode:color-dodge;opacity:calc(var(--o) * .9);background-image:var(--sparkle),var(--sparkle);background-size:90px 90px,61px 61px;background-repeat:repeat;background-position:calc(var(--bx) * 1.6px) calc(var(--by) * 1.2px),calc(var(--bx) * -1.1px) calc(var(--by) * .9px);filter:brightness(.8) contrast(1.4)}
+.f3{mix-blend-mode:soft-light;opacity:calc(.25 + var(--pfc) * .55);background-image:radial-gradient(circle at calc(var(--px) * 1%) calc(var(--py) * 1%),#fff 0,#ffffffb0 18%,#fff0 55%)}
+.sticker .f3::after{content:none}
+.sticker-card::after{content:'';position:absolute;inset:0;pointer-events:none;-webkit-mask:var(--art) center/100% 100% no-repeat;mask:var(--art) center/100% 100% no-repeat;background:linear-gradient(115deg,#fff0 35%,#fffc 48%,#fff0 60%);background-size:260% 100%;background-position:130% 0;mix-blend-mode:screen;opacity:0}
+.sticker.glint .sticker-card::after{animation:glint .8s ease-out}
+@keyframes glint{0%{background-position:130% 0;opacity:1}100%{background-position:-30% 0;opacity:1}}
+
+/* foil finishes */
+[data-foil=holo] .f1{background-image:repeating-linear-gradient(115deg,#ff9ec4 0%,#ffcf8f 7%,#fff59a 14%,#a6f0b4 21%,#90e0ff 28%,#c1a6ff 35%,#ff9ec4 42%);background-size:300% 300%;background-position:calc(var(--bx) * 1%) calc(var(--by) * 1%)}
+[data-foil=glitter] .f1{background-image:linear-gradient(calc(120deg + var(--px) * .6deg),#ffd6ef,#d6e8ff 40%,#e0ffe8 70%,#fff2c9);background-size:220% 220%;background-position:calc(var(--bx) * 1%) calc(var(--by) * 1%)}
+[data-foil=glitter] .f2{opacity:calc(var(--o) * 1.4)}
+[data-foil=prism] .f1{background-image:repeating-conic-gradient(from calc(var(--px) * 1.8deg) at calc(var(--px) * 1%) calc(var(--py) * 1%),#ff9ec4 0deg,#ffe49a 22deg,#9cf0c0 44deg,#9bd8ff 66deg,#c6a8ff 88deg,#ff9ec4 110deg);opacity:calc(var(--o) * .42)}
+[data-foil=aurora] .f1{background-image:radial-gradient(ellipse at calc(var(--px) * 1%) 20%,#ffb3e6,#fff0 60%),radial-gradient(ellipse at calc(100% - var(--px) * 1%) 85%,#a8e8ff,#fff0 60%),linear-gradient(calc(var(--py) * 1.6deg),#fff6c2,#d6c2ff);opacity:calc(var(--o) * .55)}
+
+/* flying sticker (WebGL) */
+.peel-canvas{position:fixed;left:0;top:0;z-index:9998;pointer-events:none;display:none}
+.burst{position:fixed;z-index:9999;font-size:20px;color:#ff8da9;pointer-events:none;animation:burst .7s ease-out forwards}@keyframes burst{to{translate:var(--dx) var(--dy);opacity:0;scale:.3}}
+
+.toast{position:fixed;left:50%;bottom:28px;translate:-50% 20px;opacity:0;z-index:200;background:#5e425a;color:white;padding:10px 16px;border-radius:999px;box-shadow:0 8px 20px #40243944;font-weight:800;font-size:13px;transition:.25s}.toast.show{opacity:1;translate:-50% 0}.help-sheet{position:fixed;inset:0;z-index:300;display:grid;align-items:end;background:#4a314a55;opacity:0;pointer-events:none;transition:.25s}.help-sheet.open{opacity:1;pointer-events:auto}.help-sheet>div{background:#fff9f0;border-radius:24px 24px 0 0;padding:26px 28px max(32px,env(safe-area-inset-bottom));translate:0 100%;transition:.3s}.help-sheet.open>div{translate:0}.help-sheet h2{margin:0 0 10px;font:700 27px Fraunces,serif}.help-sheet p:not(.eyebrow){margin:0;line-height:1.5;color:#806576;font-size:14px}.help-sheet button{position:absolute;right:20px;top:16px;border:0;background:#f4dee2;color:#8b6073;border-radius:50%;width:29px;height:29px;font-size:22px;line-height:1}
+.collection-preview{position:absolute;right:24px;bottom:20px;width:64px;height:78px;object-fit:cover;object-position:50% 35%;border:4px solid white;border-radius:10px;box-shadow:0 5px 14px #70506433;transform:rotate(5deg)}
+@media (min-width: 600px){.phone-shell{box-shadow:0 0 60px #a8718422}.scrapbook-page{height:420px}}
+
+.top-actions{display:flex;gap:8px;align-items:center}.sound{height:32px;width:32px;border-radius:50%;border:1px solid #ead2d1;background:#fffaf5;color:#9d6b81;font-weight:900;font-size:16px;box-shadow:0 3px 0 #dfbdc3;cursor:pointer}.sound.off{opacity:.55}
+a.help{display:grid;place-items:center;text-decoration:none}
+
+/* the blank outline a peeled sticker leaves behind in the dock (a pressed-in, paler impression of its shape) */
+.sticker .ghost{display:none}
+.sticker.source .ghost{display:block;position:absolute;inset:0;pointer-events:none;visibility:visible;opacity:0;transition:opacity .22s ease;filter:drop-shadow(0 1.2px 0 #ffffffd9) drop-shadow(0 -1px 0 #8762731f)}
+.sticker.source .ghost i{display:block;position:absolute;inset:0;-webkit-mask:var(--art) center/100% 100% no-repeat;mask:var(--art) center/100% 100% no-repeat;background:linear-gradient(160deg,#8762731c,#87627309)}
+.sticker.source.gl-hidden .ghost,.sticker.source.used .ghost{opacity:1}

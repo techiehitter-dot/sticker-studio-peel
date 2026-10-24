@@ -1,0 +1,60 @@
+/* ---------- the dock: liquid glass over the wood. It is always its full open height and slides up and down
+   with a transform, so the stickers never resize or re-flow while it moves. Closed, only the tops of the first row peek out. ---------- */
+.dock-slot { flex: none; height: 62px; position: relative; }
+.dock {
+  position: absolute; left: 0; right: 0; bottom: 0; height: var(--dock-open, 130px); z-index: 40;
+  display: flex; flex-direction: column; border-radius: 18px 18px 0 0;
+  transform: translate3d(0, var(--dock-hide, 68px), 0);
+  transition: transform .5s cubic-bezier(.2, .8, .2, 1);
+  will-change: transform;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .16) 0%, rgba(255, 255, 255, .06) 100%);
+  -webkit-backdrop-filter: blur(3px) saturate(1.25); backdrop-filter: blur(3px) saturate(1.25);
+  border-top: 1px solid rgba(255, 255, 255, .5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8), 0 -10px 28px rgba(20, 10, 0, .4);
+}
+.dock.open { transform: translate3d(0, 0, 0); }
+.dock.dragging { transition: none; }
+.dock::before {
+  content: ''; position: absolute; left: -2px; right: -2px; top: -9px; height: 14px; z-index: 2; pointer-events: none;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .8) 0%, rgba(255, 255, 255, .25) 50%, rgba(255, 255, 255, 0) 100%);
+  box-shadow: 0 -1px 3px rgba(20, 10, 0, .3);
+}
+.dock::after {
+  content: ''; position: absolute; inset: -40%; pointer-events: none; z-index: 0; border-radius: inherit;
+  background: conic-gradient(from 200deg at 50% 0%, #ff9ec4, #ffe49a, #9cf0c0, #9bd8ff, #c6a8ff, #ff9ec4, #ffe49a, #9cf0c0, #ff9ec4);
+  opacity: .12; filter: blur(26px) saturate(1.4); mix-blend-mode: soft-light;
+  animation: rainbow 16s linear infinite;
+}
+@keyframes rainbow { to { transform: rotate(360deg); } }
+
+.dock-handle { position: relative; z-index: 2; height: 22px; flex: none; display: grid; place-items: center; cursor: grab; touch-action: none; }
+.dock-handle i { cursor: grab; }
+.dock-handle i { display: block; width: 64px; height: 10px; border-radius: 999px; }
+.dock-handle i::before { inset: 2px 12px; }
+
+/* the tray: rows of four, each row exactly the width of the dock, so a sticker sits in the same place
+   whether the dock is closed (only its top edge showing) or open */
+.dock .sticker-tray {
+  position: relative; z-index: 1; flex: 1; min-height: 0; display: flex; align-items: flex-start; gap: 0;
+  overflow-x: auto; overflow-y: hidden; padding: 4px 0 0; margin: 0; scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+}
+.dock .sticker-tray::-webkit-scrollbar { display: none; }
+.dock .row {
+  flex: 0 0 100%; width: 100%; box-sizing: border-box; padding: 0 16px;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; justify-items: center;
+  scroll-snap-align: start;
+}
+.dock .slot { width: 100%; display: flex; justify-content: center; align-items: flex-start; padding-bottom: 0; }
+/* one size for every sticker in the dock, closed or open: 88px across its longest side */
+.dock .sticker.source { width: calc(88px * min(1, var(--ar))); }
+
+/* the arrow on the right says there is another row to swipe to */
+.dock-next {
+  position: absolute; right: 6px; top: 62px; z-index: 3;
+  width: 34px; height: 34px; padding: 0; border-radius: 50%; cursor: pointer; display: none; place-items: center;
+  border: 1px solid rgba(255, 255, 255, .7); background: rgba(255, 255, 255, .6); color: #7a4f66;
+  box-shadow: 0 3px 8px rgba(40, 20, 10, .25);
+}
+.dock.open .dock-next.show { display: grid; }

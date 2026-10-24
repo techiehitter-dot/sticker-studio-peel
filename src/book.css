@@ -1,0 +1,213 @@
+/* ---------- main screen: the wood fills the screen; the book takes all the room the top bar leaves ---------- */
+.phone-shell {
+  display: flex; flex-direction: column; height: 100svh; padding: 0;
+  background-color: #7a4a2a; background-image: url('/table/wood.jpg');
+  background-size: cover; background-position: center;
+}
+.phone-shell:before, .phone-shell:after { display: none; }
+
+/* paper: a warm base with a fine fibre grain */
+.paper-bg {
+  background-color: #fbf3e4;
+  background-image: url('/paper/paper.jpg');
+  background-size: 320px 320px;
+  background-blend-mode: multiply;
+}
+
+.top {
+  position: relative; z-index: 1; flex: 1; min-height: 0; display: flex; flex-direction: column;
+  padding: max(10px, env(safe-area-inset-top)) 14px 0;
+}
+.topbar { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 6px; padding: 8px 2px; }
+
+.page-nav { display: flex; gap: 6px; }
+
+/* the book runs edge to edge; the turned pages sit in a sliver on the left, clipped by the wrap */
+.book-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; margin: 0 -14px; overflow: hidden; }
+.book { position: relative; flex: 1; min-height: 0; perspective: 1500px; margin: 0 14px 6px 44px; }
+.book::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 14px; z-index: 2; pointer-events: none;
+  background: linear-gradient(to right, rgba(110, 70, 80, .28), transparent);
+}
+
+/* turned pages lie face-down to the left of the spine, stacked; only a sliver of them shows */
+.rest-leaf {
+  position: absolute; top: 0; bottom: 0; right: 100%; width: 100%;
+  background-color: #fbf3e4; background-image: url('/paper/paper.jpg'); background-size: 320px 320px; background-blend-mode: multiply;
+  border-radius: 6px 0 0 6px; box-shadow: 0 6px 14px rgba(90, 60, 50, .14); cursor: pointer;
+}
+.rest-leaf::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(to left, rgba(120, 80, 70, .30), transparent 22%);
+}
+.back-hint {
+  position: absolute; top: 0; bottom: 0; right: 100%; width: 44px; z-index: 100000;
+  display: none; align-items: center; justify-content: center; cursor: pointer;
+}
+.book.has-back .back-hint { display: flex; }
+.back-hint span {
+  writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap;
+  font: 500 10px 'DM Mono', monospace; letter-spacing: 1px; color: #7d5a4a;
+}
+
+/* the front cover: the artwork fills the book, and it is always the first thing seen */
+/* the whole cover shows, corner ornaments included: the picture is fitted, and the leather colour
+   of its edges fills the rest of the space around it */
+.cover {
+  position: absolute; inset: 0;
+  background-color: #dd939a; background-image: url('/cover/cover-feathered.webp'); background-size: contain; background-position: center; background-repeat: no-repeat;
+  box-shadow: 0 16px 30px rgba(90, 40, 60, .30), inset 10px 0 12px -8px rgba(60, 20, 30, .35);
+}
+
+/* pages fill the book */
+.scrapbook-page { transform: none; height: auto; min-height: 0; }
+.book > .scrapbook-page, .turn-base { position: absolute; inset: 0; }
+.turn-base { z-index: 1; }
+.static .sticker { pointer-events: none; }
+
+/* a sheet in the air: flat, swings about the spine. A cover is a board, so it casts a heavier shadow */
+.turn-leaf {
+  position: absolute; inset: 0; z-index: 50; transform-origin: left center; transform-style: preserve-3d; will-change: transform;
+  box-shadow: 0 14px 26px rgba(70, 40, 70, .22);
+}
+.turn-leaf.heavy { box-shadow: 0 22px 36px rgba(60, 20, 40, .38); }
+.turn-leaf > .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.turn-leaf > .face.back { transform: rotateY(180deg); }
+.face.back.endpaper { background-color: #efc7d2; }
+
+/* the page number sits in the bottom-left corner */
+.folio {
+  position: absolute; left: 12px; bottom: 10px; z-index: 3; pointer-events: none;
+  font: 500 11px 'DM Mono', monospace; letter-spacing: 1px; color: #b8956f;
+}
+
+/* a corner of dots in the lower-right, and a baby-blue hand that says a press turns the page */
+.turn-hint {
+  position: absolute; right: 0; bottom: 0; width: 92px; height: 92px; z-index: 100000;
+  padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.turn-hint .corner-dots {
+  position: absolute; right: 0; bottom: 0; width: 44px; height: 44px; pointer-events: none;
+  background-image: radial-gradient(circle, rgba(120, 65, 95, .7) 1.5px, transparent 2px);
+  background-size: 7px 7px; background-position: 100% 100%;
+  -webkit-mask-image: linear-gradient(to top left, #000 0 55%, transparent 56%);
+          mask-image: linear-gradient(to top left, #000 0 55%, transparent 56%);
+}
+.turn-hint .finger {
+  position: absolute; right: 4px; bottom: 6px; width: 46px; height: 46px; line-height: 0; pointer-events: none;
+  filter: drop-shadow(0 2px 2px rgba(20, 40, 90, .35));
+  animation: tap 1.6s ease-in-out infinite;
+}
+.turn-hint .finger img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.turn-hint .finger.retired { display: none; }
+@keyframes tap {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-2px, -6px); }
+}
+
+/* the sound of a burst of dots when a sticker lands */
+.burst { width: 7px; height: 7px; border-radius: 50%; background: #ff8da9; font-size: 0; }
+
+/* the drawing layer and the sticker's own ink are part of the page, not floating over it */
+.drawing .turn-hint, .drawing .back-hint { display: none; }
+
+.top-actions { display: flex; gap: 6px; align-items: center; }
+
+/* ---------- the shelf (front page): the bookcase sits under the menus; the cover rests on the middle shelf ---------- */
+/* the wood runs round everything; the shelf is one picture scaled to fit the room under the menus */
+.shelf {
+  flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 0 0 6px;
+  margin: 0 -14px;   /* the bookcase runs to the edges of the screen */
+}
+/* the bookcase is 1097 x 1434, so the frame keeps that proportion (.765) and fits both width and height */
+.shelf-frame {
+  position: relative; width: min(100vw, calc((100svh - 130px) * .765)); aspect-ratio: 1097 / 1434;
+  filter: drop-shadow(0 18px 24px rgba(20, 8, 0, .45));
+}
+.shelf-img { display: block; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none; }
+/* the cover sits on the middle shelf: its foot rests on the shelf top at about 63% of the frame height */
+.shelf-book {
+  position: absolute; left: 43%; top: 47%; width: 14%; aspect-ratio: 2 / 3; padding: 0; border: 0;
+  background: none; cursor: pointer; border-radius: 3px 7px 7px 3px;
+  box-shadow: 0 8px 12px rgba(20, 8, 0, .45);
+  transition: transform .4s cubic-bezier(.2, .8, .2, 1), box-shadow .4s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.shelf-book img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; pointer-events: none; }
+.shelf-book:hover, .shelf-book:focus-visible { transform: translateY(-3px); box-shadow: 0 14px 18px rgba(20, 8, 0, .5); }
+.shelf-book:focus-visible { outline: 3px solid #ff9ec4; outline-offset: 3px; }
+.shelf-book.lifting { transform: translateY(-14%) scale(1.25); box-shadow: 0 30px 40px rgba(20, 8, 0, .6); }
+
+/* ---------- which menus and panels belong to which view ---------- */
+.view-shelf #book-wrap, .view-shelf .dock-slot, .view-shelf .draw-panel, .view-shelf .page-nav,
+.view-shelf #draw-btn, .view-shelf #shelf-btn { display: none; }
+.view-book #shelf { display: none; }
+.view-book #shelf-btn { display: grid; }
+.view-book .book-wrap { animation: bookIn .45s ease both; }
+@keyframes bookIn { from { opacity: 0; transform: scale(.97); } }
+.view-book .book-wrap { display: flex; }
+.top-actions .shelf-btn { display: grid; place-items: center; }
+
+/* ---------- tactile grips: a domed pill with a dotted texture, so the finger knows where to grab ---------- */
+.grip {
+  position: relative; cursor: grab; touch-action: none;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #fffdf8 0%, #f1dfe6 55%, #e2c9d3 100%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, .95), inset 0 -1px 1px rgba(120, 60, 80, .35), 0 1px 2px rgba(40, 20, 10, .45);
+}
+.grip::before {
+  content: ''; position: absolute; inset: 2px 9px; border-radius: inherit; pointer-events: none;
+  background-image: radial-gradient(circle, rgba(120, 65, 95, .65) 1.05px, transparent 1.45px);
+  background-size: 5px 5px; background-position: center;
+}
+.grip:active { cursor: grabbing; }
+
+/* ---------- the leather buttons: each is a picture, normal and pressed. A press swaps the picture. ---------- */
+.topbar .btn-img {
+  --img: none; --img-pressed: none;
+  display: grid; place-items: center; padding: 0; margin: 0; border: 0; box-shadow: none; outline: none;
+  background-color: transparent; background-image: var(--img); background-size: 100% 100%; background-repeat: no-repeat;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none;
+  transition: filter .08s ease;
+}
+.topbar .btn-img:active, .topbar .btn-img.is-down, .topbar .btn-img[aria-expanded="true"] { background-image: var(--img-pressed); }
+.topbar .btn-img:disabled { opacity: .45; cursor: default; }
+.topbar .btn-img:focus-visible { filter: drop-shadow(0 0 0 #ff9ec4) drop-shadow(0 0 3px #ff9ec4); }
+.topbar .btn-circle { width: var(--btn); height: var(--btn); font-size: 0; }
+.topbar .btn-pill {
+  --img: url('/ui/pill.png'); --img-pressed: url('/ui/pill-pressed.png');
+  width: calc(var(--btn) * 2.65); height: var(--btn);   /* the label is part of the picture */
+}
+.topbar .btn-left { --img: url('/ui/left.png'); --img-pressed: url('/ui/left-pressed.png'); }
+.topbar .btn-right { --img: url('/ui/right.png'); --img-pressed: url('/ui/right-pressed.png'); }
+.topbar .btn-draw { --img: url('/ui/draw.png'); --img-pressed: url('/ui/draw-pressed.png'); }
+.topbar .btn-shelf { --img: url('/ui/shelf.png'); --img-pressed: url('/ui/shelf-pressed.png'); }
+.topbar .btn-sound { --img: url('/ui/sound.png'); --img-pressed: url('/ui/sound-pressed.png'); }
+.topbar .btn-help { --img: url('/ui/help.png'); --img-pressed: url('/ui/help-pressed.png'); }
+/* the sound button shows its picture; its text (♪ or ×) stays hidden, the muted state dims the picture */
+.topbar .btn-sound.off { opacity: .55; }
+
+/* ---------- the stitched leather banner under the buttons. On a phone it is 60px wider than the screen, so the
+   curved ends run off the edges; on bigger screens the whole banner shows ---------- */
+/* the strap's stitching runs at rows 19 and 166 of 189, so the usable inside is 78% of its height. The strap is sized
+   so the buttons plus a 4px margin fit entirely inside the stitching */
+:root { --btn: 36px; --strap: calc((var(--btn) + 8px) / .778); }
+.topbar-banner {
+  position: absolute; left: 50%; top: 50%; z-index: 0; transform: translate(-50%, -50%);
+  height: var(--strap);
+  width: calc(var(--strap) * 2145 / 189);   /* natural proportions on a phone: the ends run off the screen */
+  background: url('/ui/banner.png') center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+/* on bigger screens the app is a column with room to spare: the whole banner fits inside it, ends and all */
+@media (min-width: 481px) {
+  :root { --btn: 32px; }
+  .topbar-banner { width: calc(100% - 28px); }   /* whole strap fits the column; it is stretched a little taller to fit the buttons */
+}
+
+/* the buttons sit on top of the strap, so the strap runs behind them */
+.topbar .btn-img { position: relative; z-index: 1; }
+
+/* the cover's sticker layer: stickers sit on the cover like they sit on a page */
+.cover-stickers { position: absolute; inset: 0; }
+.cover-stickers.static .sticker { pointer-events: none; }
